@@ -1,6 +1,6 @@
 {
   "name": "connect-send",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,15 +10,19 @@
   },
   "dependencies": {
     "@solana/wallet-adapter-base": "^0.9.24",
-    "@solana/wallet-adapter-react": "^0.15.36",
-    "@solana/wallet-adapter-react-ui": "^0.9.36",
+    "@solana/wallet-adapter-react": "^0.15.20",
+    "@solana/wallet-adapter-react-ui": "^0.9.18",
     "@solana/wallet-adapter-wallets": "^0.18.2",
     "@solana/web3.js": "^1.43.0",
+    "framer-motion": "^12.9.2",
+    "lodash.debounce": "^4.0.8",
+    "motion": "^12.9.2",
     "next": "15.2.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hot-toast": "^2.5.2",
-    "react-toastify": "^11.0.5"
+    "react-hot-toast": "^2.4.1",
+    "react-toastify": "^11.0.5",
+    "styled-components": "^6.1.17"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

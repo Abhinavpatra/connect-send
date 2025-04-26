@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton, WalletDisconnectButton } from "@solana/wallet-adapter-react-ui";
-import { Connection, PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
+import { PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 import { toast, Toaster } from "react-hot-toast";
+import { motion, AnimatePresence } from "framer-motion";
+import Button from "./Button";
 
 type Props = {
   setNetwork: (val: "devnet" | "mainnet-beta") => void;
@@ -17,13 +19,21 @@ export default function WalletActions({ setNetwork, currentNetwork }: Props) {
 
   const [lamports, setLamports] = useState<number>(0);
   const [recipient, setRecipient] = useState<PublicKey | null>(null);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [recipientInput, setRecipientInput] = useState<string>("");
+  const [isFormValid, setIsFormValid] = useState<boolean>(false);
 
-  async function handleSend()  {
+  useEffect(() => {
+    setIsFormValid(!!publicKey && !!recipient && lamports > 0);
+  }, [publicKey, recipient, lamports]);
+
+  async function handleSend() {
     if (!publicKey || !recipient || !sendTransaction) {
       toast.error("Wallet not connected or recipient not set");
       return;
     }
 
+    setIsProcessing(true);
     try {
       const transaction = new Transaction().add(
         SystemProgram.transfer({
@@ -38,67 +48,144 @@ export default function WalletActions({ setNetwork, currentNetwork }: Props) {
       transaction.feePayer = publicKey;
 
       const signature = await sendTransaction(transaction, connection);
+      
+      toast.success("Transaction initiated!", { id: "transaction-pending" });
+      
       await connection.confirmTransaction(signature, "confirmed");
-      toast.success("Transaction successful!");
+      
+      toast.success("Transaction successful!", {
+        id: "transaction-confirmed", 
+        icon: "(●'◡'●)"
+      });
+      
       console.log("Transaction details", signature);
+      
+      setLamports(0);
+      setRecipientInput("");
+      setRecipient(null);
     } catch (error) {
       console.error(error);
-      toast.error("Transaction failed");
+      toast.error("Transaction failed", { icon: "❌" });
+    } finally {
+      setIsProcessing(false);
+    }
+  }
+
+  const handleRecipientChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRecipientInput(e.target.value);
+    try {
+      if (e.target.value.trim() !== "") {
+        setRecipient(new PublicKey(e.target.value));
+      } else {
+        setRecipient(null);
+      }
+    } catch (err) {
+      setRecipient(null);
+      if (e.target.value.trim() !== "") {
+        toast.error("Invalid Public Key", { id: "invalid-key" });
+      }
     }
   };
 
+  const handleNetworkChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedNetwork = e.target.value as "devnet" | "mainnet-beta";
+    setNetwork(selectedNetwork);
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { type: "spring", stiffness: 300, damping: 24 }
+    }
+  };
+
+  const buttonVariants = {
+    idle: { scale: 1 },
+    hover: { scale: 1.05, transition: { duration: 0.2 } },
+    tap: { scale: 0.95, transition: { duration: 0.1 } }
+  };
+
+  const networkColors = {
+    "devnet": "bg-emerald-500",
+    "mainnet-beta": "bg-blue-500"
+  };
+
   return (
-    <div className="p-4">
-      <Toaster position="top-right" />
-
-      <div className="flex gap-4 mb-4">
-        <WalletMultiButton />
-        <WalletDisconnectButton />
-        <button
-          onClick={() =>
-            setNetwork(currentNetwork === "devnet" ? "mainnet-beta" : "devnet")
-          }
-          className="px-4 py-2 text-white bg-purple-600 rounded hover:bg-purple-500"
+    <div className="max-w-2xl mx-auto text-white space-y-4">
+      <AnimatePresence>
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="space-y-4"
         >
-          Switch to {currentNetwork === "devnet" ? "Mainnet" : "Devnet"}
-        </button>
-      </div>
+          <div>
+            <WalletMultiButton />
+          </div>
 
-      <input
-        type="number"
-        step={1000}
-        placeholder="Lamports"
-        value={lamports}
-        onChange={(e) => setLamports(Number(e.target.value))}
-        className="max-w-2xl p-4 m-4 text-black border-2 bg-slate-300"
-      />
-    <div className="relative w-full">
-          <input
-            type="text"
-            placeholder="public key of recepient"
-            required
-            onChange={(e)=>{
-                try {
-                    setRecipient(new PublicKey(e.target.value));
-                  } catch (err) {
-                    toast.error("Invalid PublicKey");
-                  }
-            }}
-            className="text-white text-[1.2rem] bg-transparent w-full px-4 py-3 border-b-[3px] border-transparent focus:outline-none shadow-md focus:border-none peer"
-          />
-          <span
-            className="absolute bottom-0 left-0 h-[3px] w-0 bg-gradient-to-r from-[#FF6464] via-[#FFBF59] to-[#47C9FF] transition-all duration-1000 ease-[cubic-bezier(0.42,0,0.58,1)] peer-focus:w-full"
-          ></span>
-        </div> 
-      
+          <motion.div variants={itemVariants} className="text-center space-y-4">
+            <h2 className="text-xl">Send SOL</h2>
 
-      <button
-        onClick={handleSend}
-        className="px-4 py-2 mt-4 text-white bg-blue-600 rounded hover:bg-blue-500"
-      >
-        Send Lamports
-      </button>
-      
+            <input
+              type="text"
+              className="w-full p-3 rounded-lg text-black bg-gray-100 mb-4"
+              value={recipientInput}
+              onChange={handleRecipientChange}
+              placeholder="Recipient Public Key"
+            />
+
+            <div className="flex justify-between mb-4">
+              <input
+                type="number"
+                className="w-3/4 p-3 rounded-lg text-black bg-gray-100"
+                min={1}
+                step={10000}
+                value={lamports}
+                onChange={(e) => setLamports(Number(e.target.value))}
+                placeholder="Amount in SOL"
+              />
+            </div>
+          </motion.div>
+
+          <motion.div variants={itemVariants} className="text-center space-y-4">
+            <select
+              className="w-full p-3 rounded-lg bg-gray-100 text-black"
+              value={currentNetwork}
+              onChange={handleNetworkChange}
+            >
+              <option value="devnet">Devnet</option>
+              <option value="mainnet-beta">Mainnet</option>
+            </select>
+          </motion.div>
+
+          <motion.div
+            variants={itemVariants}
+            className="text-center space-y-4"
+          >
+            <Button
+              onClick={handleSend}
+              disabled={!isFormValid || isProcessing}
+              variants={buttonVariants}
+              whileHover="hover"
+              whileTap="tap"
+            >
+              {isProcessing ? "Processing..." : "Send"}
+            </Button>
+          </motion.div>
+        </motion.div>
+      </AnimatePresence>
+
+      <Toaster />
     </div>
   );
 }
