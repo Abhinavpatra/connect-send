@@ -248,7 +248,7 @@ export default function WalletActions({ setNetwork, currentNetwork, onTransactio
     console.log("🔄 Switching network to:", selectedNetwork);
     
     if (connected) {
-      toast.info("Network changed. Please reconnect your wallet.", { duration: 4000 });
+      toast("Network changed. Please reconnect your wallet.", { duration: 4000 });
     }
     
     setNetwork(selectedNetwork);

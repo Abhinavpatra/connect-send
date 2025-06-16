@@ -8,6 +8,7 @@ interface ButtonProps {
   variants?: any;
   whileHover?: string;
   whileTap?: string;
+  className?: string;
 }
 
 export default function Button({ 
