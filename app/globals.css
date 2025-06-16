@@ -24,3 +24,31 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.break-all {
+  word-break: break-all;
+}
+
+.space-y-4 > * + * {
+  margin-top: 1rem;
+}
+
+.text-blue-400 {
+  color: #60a5fa;
+}
+
+.text-blue-400:hover {
+  color: #93c5fd;
+}
+
+.text-gray-300 {
+  color: #d1d5db;
+}
+
+.text-gray-400 {
+  color: #9ca3af;
+}
+
+.border-gray-700 {
+  border-color: #374151;
+}
