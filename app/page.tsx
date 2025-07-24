@@ -152,13 +152,13 @@ export default function Home() {
                     <div className="text-sm break-all">
                       <span className="text-gray-400">Signature: </span>
                       <a
-  href={`https://explorer.solana.com/tx/${lastSignature}${network === 'devnet' ? '?cluster=devnet' : ''}`}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="text-blue-400 transition-colors hover:text-blue-300"
->
-  {lastSignature}
-</a>
+                          href={`https://explorer.solana.com/tx/${lastSignature}${network === 'devnet' ? '?cluster=devnet' : ''}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-400 transition-colors hover:text-blue-300"
+                        >
+                          {lastSignature}
+                      </a>
                     </div>
                   </div>
                 </motion.div>

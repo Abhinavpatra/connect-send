@@ -1,87 +1,101 @@
-for transactions
-The fields you need to set are:
-    recentBlockhash: fetched from the blockchain
-    feePayer: your wallet
+# Connect & Send - Solana Wallet Interface
 
-Then you sign the transaction with your wallet and send it to the blockchain.
-THen optionally confirm the transaction.
+A modern, user-friendly interface for interacting with the Solana blockchain. Built with Next.js, TypeScript, and the Solana Web3.js SDK.
 
-```js
-    await connection.confirmTransaction(signature, "confirmed");
+## Features
+
+### Wallet Integration
+- Support for multiple wallet providers:
+  - Phantom
+  - Solflare
+  - Torus
+- Secure wallet connection and disconnection
+- Automatic wallet reconnection
+
+### Network Support
+- Switch between Devnet and Mainnet Beta
+- Dedicated endpoints for both networks via Alchemy
+- Real-time network status monitoring
+
+### Transaction Capabilities
+- Send SOL tokens to any valid Solana address
+- Real-time lamport to SOL conversion
+- Priority fee optimization
+- Enhanced transaction confirmation with intelligent polling
+- Transaction signature tracking and verification
+
+### User Interface
+- Clean, modern design with Tailwind CSS
+- Smooth animations powered by Framer Motion
+- Responsive layout for all device sizes
+- Real-time form validation
+- Loading states and progress indicators
+- Toast notifications for important events
+
+### Transaction Monitoring
+- Transaction status tracking
+- Direct links to Solana Explorer
+- Last transaction signature display
+- Network-aware Explorer links
+
+### Security Features
+- Input validation for recipient addresses
+- Balance checks before transactions
+- Network connection health monitoring
+- Secure wallet disconnect handling
+
+## Tech Stack
+
+- **Framework**: Next.js 15
+- **Language**: TypeScript
+- **Styling**: 
+  - Tailwind CSS
+  - Styled Components
+- **Blockchain**: 
+  - Solana Web3.js
+  - Wallet Adapter
+- **UI Components**:
+  - Framer Motion
+  - React Hot Toast
+- **Development**:
+  - ESLint
+  - PostCSS
+
+## Getting Started
+
+1. Clone the repository:
+```bash
+git clone https://github.com/Abhinavpatra/connect-send.git
 ```
 
-Build the Transaction
-```javascript
-    const transaction = new Transaction().add(
-        SystemProgram.transfer({
-            fromPubkey: publicKey,       // sender
-            toPubkey: recipient,         // recipient
-            lamports: amount,            // amount in lamports
-        })
-        );
-
-```
- split WalletActions into a separate file (WalletActions.tsx) for 
-
-1. Hydration Safety (Next.js "use client")
-You’re using Next.js App Router.
-
-Only client-side logic (like useWallet) should run with "use client".
-
-Keeping it separate ensures clean server/client boundaries.
-
-
-
-Parameters Used in SystemProgram.transfer
-fromPubkey: The public key of the sender’s wallet (the wallet initiating the transfer).
-
-toPubkey: The public key of the recipient’s wallet (the wallet receiving the lamports).
-
-lamports: The amount of lamports to be transferred. 1 Sol = 1,000,000,000 lamports.
-
-recentBlockhash: A recent blockhash to ensure the transaction is valid and not a replay attack.
-
-feePayer: The wallet that will pay for the transaction fees, typically the sender.
-
-Setting Up the Network
-In Solana, transactions can be made on different networks, such as devnet or mainnet.
-
-How to Set it to Devnet
-In this example, the network is set to devnet (a test network), which is useful for testing without spending real tokens:
-
-```tsx
-
-const wallets = [
-  new PhantomWalletAdapter({ network: "devnet" }),
-  new SolflareWalletAdapter({ network: "devnet" }),
-  new TorusWalletAdapter({ network: "devnet" }),
-];
-```
-Here, network: "devnet" specifies that the transaction should be made on the devnet.
-
-The devnet is a test network that mimics the Solana mainnet but doesn't use real funds. You can test your code here without worrying about spending actual Solana.
-
-To connect to the devnet in Solana's wallet adapters, we use the following connection endpoint:
-```tsx
-<ConnectionProvider endpoint="https://api.devnet.solana.com">
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
 ```
 
-return (
-  <ConnectionProvider endpoint="https://api.mainnet-beta.solana.com">
-    <WalletProvider wallets={wallets} autoConnect>
-      <WalletModalProvider>
-        <WalletActions />
-      </WalletModalProvider>
-    </WalletProvider>
-  </ConnectionProvider>
-);
-Once you switch to mainnet, transactions will be made using real funds. Be cautious and ensure that you have sufficient SOL in your wallet to pay for transaction fees.
+3. Run the development server:
+```bash
+npm run dev
+# or
+yarn dev
+```
 
-How It Works
-User Connection: The user connects their wallet (e.g., Phantom, Solflare, or Torus) using the WalletMultiButton component.
-
-Transaction Initiation: The user enters the amount of lamports to send and the recipient's public key. Once the user clicks "Send Lamports," the transfer is initiated using the SystemProgram.transfer method.
-
-Transaction Confirmation: The transaction is sent to the Solana network, confirmed, and a signature is returned to indicate the transaction was successful.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
 
+## Usage
+
+1. Connect your Solana wallet using the "Connect Wallet" button
+2. Select your desired network (Devnet/Mainnet)
+3. Enter the recipient's Solana address
+4. Specify the amount in lamports (1 SOL = 1,000,000,000 lamports)
+5. Click "Send Transaction" to initiate the transfer
+6. Confirm the transaction in your wallet
+7. Monitor the transaction status via toast notifications
+8. View transaction details in the Solana Explorer
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.

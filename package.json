@@ -22,7 +22,9 @@
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
     "react-toastify": "^11.0.5",
-    "styled-components": "^6.1.17"
+    "styled-components": "^6.1.17",
+    "uuid": "^9.0.1",
+    "@types/uuid": "^9.0.8"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
