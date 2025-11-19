@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   ConnectionProvider,
   WalletProvider,
@@ -23,21 +24,35 @@ const WalletActions = dynamic(() => import("../components/WalletActions"), {
 });
 
 export default function Home() {
+  const router = useRouter();
   const [isClient, setIsClient] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [network, setNetwork] = useState<"devnet" | "mainnet-beta">("devnet");
   const [isLoading, setIsLoading] = useState(true);
   const [lastSignature, setLastSignature] = useState<string | null>(null);
 
   useEffect(() => {
     setIsClient(true);
+    
+    // Check for token in localStorage
+    const token = localStorage.getItem('token');
+    if (!token) {
+      // Show 404 for 1 second then redirect to signup
+      setTimeout(() => {
+        router.push('/signup');
+      }, 1000);
+      return;
+    }
+    
+    setIsAuthenticated(true);
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 600);
     return () => clearTimeout(timer);
-  }, []);
+  }, [router]);
 
   const handleTransactionComplete = (signature: string) => {
-    console.log("🎉 Transaction completed successfully:", signature);
+    console.log("Transaction completed successfully:", signature);
     setLastSignature(signature);
     toast.success("Transaction completed! Signature at the bottom.");
   };
@@ -46,7 +61,17 @@ export default function Home() {
   const pageDescription =
     "A secure and user-friendly interface for Solana blockchain transactions. Connect your wallet, switch between Devnet and Mainnet, and send SOL with ease.";
 
-  if (!isClient) return null;
+  if (!isClient || !isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-black">
+        <div className="text-center text-white">
+          <h1 className="text-8xl font-bold mb-4 bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">404</h1>
+          <p className="text-2xl mb-2 text-gray-400">Page not found</p>
+          <p className="text-base text-blue-500">Redirecting to signup...</p>
+        </div>
+      </div>
+    );
+  }
 
   const endpoint =
     network === "mainnet-beta"
