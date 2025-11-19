@@ -9,7 +9,7 @@ export default function NotFound() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.push('/signup');
+      router.push('/');
     }, 1000);
 
     return () => clearTimeout(timer);
@@ -20,7 +20,7 @@ export default function NotFound() {
       <StyledContent>
         <h1>404</h1>
         <p>Page not found</p>
-        <p className="redirect-text">Redirecting to signup...</p>
+        <p className="redirect-text">Redirecting to main page...</p>
       </StyledContent>
     </StyledContainer>
   );
