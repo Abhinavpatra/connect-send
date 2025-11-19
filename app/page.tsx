@@ -37,10 +37,7 @@ export default function Home() {
     // Check for token in localStorage
     const token = localStorage.getItem('token');
     if (!token) {
-      // Show 404 for 1 second then redirect to signup
-      setTimeout(() => {
-        router.push('/signup');
-      }, 1000);
+      router.replace('/signup');
       return;
     }
     
@@ -61,13 +58,14 @@ export default function Home() {
   const pageDescription =
     "A secure and user-friendly interface for Solana blockchain transactions. Connect your wallet, switch between Devnet and Mainnet, and send SOL with ease.";
 
-  if (!isClient || !isAuthenticated) {
+  if (!isClient) return null;
+
+  if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-black">
-        <div className="text-center text-white">
-          <h1 className="text-8xl font-bold mb-4 bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">404</h1>
-          <p className="text-2xl mb-2 text-gray-400">Page not found</p>
-          <p className="text-base text-blue-500">Redirecting to signup...</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-amber-50 to-amber-100">
+        <div className="text-center text-amber-900">
+          <h1 className="text-3xl font-semibold mb-4">Redirecting…</h1>
+          <p className="text-amber-700">Hold tight while we take you to the signup page.</p>
         </div>
       </div>
     );
@@ -112,7 +110,7 @@ export default function Home() {
         animate="animate"
         exit="exit"
         variants={pageVariants}
-        className="min-h-screen px-4 py-12 bg-gradient-to-b from-gray-900 to-black"
+        className="min-h-screen px-4 py-12 bg-gradient-to-b from-amber-50 to-amber-100"
       >
         {isLoading ? (
           <div className="flex items-center justify-center h-screen">
@@ -121,7 +119,7 @@ export default function Home() {
                 rotate: 360,
                 transition: { duration: 1.5, repeat: Infinity, ease: "linear" },
               }}
-              className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full"
+              className="w-16 h-16 border-t-4 border-amber-500 border-solid rounded-full"
             />
           </div>
         ) : (
@@ -132,10 +130,10 @@ export default function Home() {
               transition={{ delay: 0.2, duration: 0.5 }}
               className="mb-10 text-center"
             >
-              <h1 className="mb-2 text-4xl font-bold text-white">
+              <h1 className="mb-2 text-4xl font-semibold text-amber-900">
                 Solana {network === "devnet" ? "Devnet" : "Mainnet"} Interface
               </h1>
-              <p className="max-w-2xl mx-auto text-gray-400">
+              <p className="max-w-2xl mx-auto text-amber-700">
                 Connect your wallet, switch networks, and execute transactions securely on the Solana blockchain.
               </p>
             </motion.div>
@@ -156,7 +154,7 @@ export default function Home() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8, duration: 0.5 }}
-              className="mt-16 text-sm text-center text-gray-500"
+              className="mt-16 text-sm text-center text-amber-700"
             >
               <p>
                 This interface allows you to interact with the Solana {network} network.
@@ -170,17 +168,17 @@ export default function Home() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="p-4 mt-6 text-white bg-gray-800 border border-gray-700 rounded-lg"
+                  className="p-4 mt-6 text-amber-900 bg-amber-100 border border-amber-200 rounded-lg"
                 >
                   <div className="flex flex-col gap-2">
-                    <h3 className="text-sm font-medium text-gray-300">Last Transaction Signature</h3>
+                    <h3 className="text-sm font-medium text-amber-800">Last Transaction Signature</h3>
                     <div className="text-sm break-all">
-                      <span className="text-gray-400">Signature: </span>
+                      <span className="text-amber-700">Signature: </span>
                       <a
                           href={`https://explorer.solana.com/tx/${lastSignature}${network === 'devnet' ? '?cluster=devnet' : ''}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-400 transition-colors hover:text-blue-300"
+                          className="text-amber-600 transition-colors hover:text-amber-500"
                         >
                           {lastSignature}
                       </a>

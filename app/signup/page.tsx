@@ -40,24 +40,24 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-black px-4">
-      <form onSubmit={handleSignup} className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md text-center">
-        <h1 className="text-3xl font-bold text-white mb-2">Welcome to Connect Send</h1>
-        <p className="text-gray-400 mb-6">Please sign up to continue</p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-amber-50 to-amber-100 px-4">
+      <form onSubmit={handleSignup} className="bg-white/90 backdrop-blur p-8 rounded-xl shadow-lg w-full max-w-md text-center border border-amber-100">
+        <h1 className="text-3xl font-semibold text-amber-900 mb-2">Welcome to Connect Send</h1>
+        <p className="text-amber-700 mb-6">Please sign up to continue</p>
         
         <input
           type="text"
           placeholder="Enter your username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="w-full px-4 py-3 mb-4 bg-gray-700 border-2 border-gray-600 rounded text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
+          className="w-full px-4 py-3 mb-4 bg-amber-50 border-2 border-amber-200 rounded text-amber-900 placeholder-amber-400 focus:outline-none focus:border-amber-500"
           required
         />
         
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full py-3 bg-blue-600 text-white rounded font-medium hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors"
+          className="w-full py-3 bg-amber-500 text-amber-950 rounded font-medium hover:bg-amber-400 disabled:bg-amber-200 disabled:text-amber-400 disabled:cursor-not-allowed transition-colors"
         >
           {isLoading ? 'Signing up...' : 'Sign Up'}
         </button>

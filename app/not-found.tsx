@@ -15,11 +15,11 @@ export default function NotFound() {
   }, [router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-black">
-      <div className="text-center text-white">
-        <h1 className="text-8xl font-bold mb-4 bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">404</h1>
-        <p className="text-2xl mb-2 text-gray-400">Page not found</p>
-        <p className="text-base text-blue-500">Redirecting to signup...</p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-amber-50 to-amber-100">
+      <div className="text-center text-amber-900">
+        <h1 className="text-7xl font-semibold mb-4">404</h1>
+        <p className="text-2xl mb-2 text-amber-700">Page not found</p>
+        <p className="text-base text-amber-600">Redirecting to signup...</p>
       </div>
     </div>
   );
